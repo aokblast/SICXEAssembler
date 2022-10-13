@@ -162,7 +162,7 @@ impl Expression {
             return Err(err);
         }
 
-        let (tokens, stat) = Token::from_lexemas(&lexemas).unwrap();
+        let (tokens, stat) = tokens.unwrap();
 
         match tokens.len() {
             1 => {

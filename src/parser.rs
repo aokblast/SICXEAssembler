@@ -29,7 +29,7 @@ impl HeaderSection {
     pub fn from_expression(expression: &Expression) -> Result<Self, &str> {
         if let (Command::Directive(Directive::START), _) = expression.command {
             if let Some((Operand::Literal(Literal::Integer(start_addr)), _)) = expression.operand {
-                Ok(Self{program_name: String::from(expression.label.as_ref().unwrap()), start_address: (start_addr as u64), len: 0})
+                Ok(Self{program_name: String::from(expression.label.as_ref().unwrap()), start_address: (u64::from_str_radix(&(start_addr).to_string(), 16) as u64), len: 0})
             } else {
                 Err("Invalid Literal")
             }
@@ -94,6 +94,24 @@ pub struct ParserData {
 
 impl ParserData {
 
+    fn get_addr(addr: u64, pc: u64, base: &Option<u64>) -> (i64, Option<Flag>){
+        let addr = addr as i64;
+        let pc = pc as i64;
+
+        if (addr - pc) >= -2048 && (addr - pc) <= 2047  {
+            (addr - pc, Some(Flag::P))
+        } else if let Some(base) = *base {
+            let base = base as i64;
+            if (addr - base) >= 0 && (addr - base) <= 4095 {
+                (addr - base, Some(Flag::B))
+            } else {
+                (addr, None)
+            }
+
+        } else {
+            (addr, None)
+        }
+    }
 
     fn get_symbols(expressions: &Vec<Expression>, start_address: u64) -> Result<HashMap<String, u64>, &str> {
         let mut symbol_table = HashMap::new();
@@ -114,25 +132,6 @@ impl ParserData {
         }
 
         Ok(symbol_table)
-    }
-
-    fn get_addr(addr: u64, pc: u64, base: &Option<u64>) -> (i64, Option<Flag>){
-        let addr = addr as i64;
-        let pc = pc as i64;
-
-        if (addr - pc) >= -2048 && (addr - pc) <= 2047  {
-            (addr - pc, Some(Flag::P))
-        } else if let Some(base) = *base {
-            let base = base as i65l;
-            if (addr - base) >= 0 && (addr - base) <= 4095 {
-                (addr - base, Some(Flag::B))
-            } else {
-                (addr, None)
-            }
-
-        } else {
-            (addr, None)
-        }
     }
 
     fn parse(expressions: &Vec<Expression>, symbol_table: &HashMap<String, u64>, start_address: u64) -> Result<Vec<String>, Box<dyn Error>>{
