@@ -29,7 +29,7 @@ impl HeaderSection {
     pub fn from_expression(expression: &Expression) -> Result<Self, &str> {
         if let (Command::Directive(Directive::START), _) = expression.command {
             if let Some((Operand::Literal(Literal::Integer(start_addr)), _)) = expression.operand {
-                Ok(Self{program_name: String::from(expression.label.as_ref().unwrap()), start_address: (u64::from_str_radix(&(start_addr).to_string(), 16) as u64), len: 0})
+                Ok(Self{program_name: String::from(expression.label.as_ref().unwrap()), start_address: u64::from_str_radix(&(start_addr).to_string(), 16).unwrap(), len: 0})
             } else {
                 Err("Invalid Literal")
             }
