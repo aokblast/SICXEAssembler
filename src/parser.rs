@@ -56,7 +56,8 @@ impl Display for TextSection {
 }
 
 pub struct EndSection {
-    start_address: u64
+    start_address: u64,
+    pub start_label: String
 }
 
 impl Display for EndSection {
@@ -70,7 +71,7 @@ impl EndSection {
         if let (Command::Directive(Directive::END), _) = expression.command {
             if let Some((Operand::Symbol(symbol), _)) = &expression.operand {
                 if let Some(addr) = symbol_table.get(symbol){
-                    Ok(Self{start_address: *addr})
+                    Ok(Self{start_address: *addr, start_label: symbol.to_string()})
                 } else {
                     Err(format!("Symbol: {} not found", symbol))?
                 }
@@ -176,7 +177,7 @@ impl ParserData {
                                 Operand::Literal(literal) => {
                                     match literal {
                                         Literal::Integer(num) => {
-                                            res.push(format!("{:04X}", num));
+                                            res.push(format!("{:06X}", num));
                                         }
                                         _ => {
                                             Err("Invalid expression")?

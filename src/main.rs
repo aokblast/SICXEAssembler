@@ -25,10 +25,14 @@ fn main() {
 
 
     let data = ParserData::from_file(file_content).unwrap();
-    let (mut line, mut address) = (1, data.header.start_address);
+    let (mut line, mut address) = (0, data.header.start_address);
 
 
     println!("{:>04} {:>08} {:>12} {:>12} {:>12} {}", "line", "address", "label", "operate", "operand", "opcode");
+
+    println!("{:>04} {:>8} {:>12} {:>12} {:>12}", line, address, data.header.program_name, "START", data.header.start_address);
+
+    line += 1;
 
     for text in &data.texts {
         for (expression, opcode) in &text.expressions {
@@ -39,6 +43,8 @@ fn main() {
             address += expression.len() as u64;
         }
     }
+
+    println!("{:>04} {:>8} {:>12} {:>12} {:>12}", line, "", "", "END", data.end.start_label);
 
     println!("{}", data.header);
 

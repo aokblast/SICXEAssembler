@@ -179,6 +179,11 @@ impl Expression {
             2 => {
                 match &tokens[0] {
                     Token::Symbol(sym) => {
+
+                        if COMMANDS.get(&sym[..]).is_some() {
+                            Err("label cannot be reserved word")?
+                        }
+
                         label = Some(String::from(sym));
                     }
                     Token::Command(cmd) => {
@@ -213,6 +218,11 @@ impl Expression {
             3 => {
                 match &tokens[0] {
                     Token::Symbol(sym) => {
+
+                        if COMMANDS.get(&sym[..]).is_some() {
+                            Err("label cannot be reserved word")?
+                        }
+
                         label = Some(String::from(sym));
                     }
                     _ => {
