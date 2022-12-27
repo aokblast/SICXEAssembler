@@ -67,15 +67,15 @@ pub enum Token {
 
 
 impl Token {
-    pub fn is_symbol(lexema: &str) -> bool {
-        if lexema.len() == 1 {
+    pub fn is_symbol(lexeme: &str) -> bool {
+        if lexeme.len() == 1 {
             return false;
         }
-        let prefix = lexema.chars().nth(0).unwrap();
+        let prefix = lexeme.chars().nth(0).unwrap();
 
         if !prefix.is_alphabetic() && prefix != '_' {
             false
-        } else if lexema.contains(|x: char| {!x.is_alphanumeric()}) {
+        } else if lexeme.contains(|x: char| {!x.is_alphanumeric()}) {
             false
         } else {
             true
@@ -109,36 +109,36 @@ impl Token {
         }
     }
 
-    pub fn from_lexemas(lexemas: &Vec<String>) -> Result<(Vec<Token>, Stat), Box<dyn Error>> {
+    pub fn from_lexemes(lexemes: &Vec<String>) -> Result<(Vec<Token>, Stat), Box<dyn Error>> {
         let mut res = vec![];
         let mut stat = Stat::default();
 
-        for str in lexemas {
+        for str in lexemes {
             let prefix_flag = Flag::from_prefix(str);
             let suffix_flag = Flag::from_suffix(str);
-            let mut lexema: &str;
+            let mut lexeme: &str;
             let token: Token;
 
             // eliminate prefix and suffix
             if prefix_flag.is_some() {
-                lexema = &str[1..];
+                lexeme = &str[1..];
             } else {
-                lexema = &str;
+                lexeme = &str;
             }
 
             if suffix_flag.is_some() {
-                lexema = &lexema[..lexema.len() - 2];
+                lexeme = &lexeme[..lexeme.len() - 2];
             }
 
 
             // make token
-            if let Some(command) = COMMANDS.get(lexema) {
+            if let Some(command) = COMMANDS.get(lexeme) {
                 token = Token::Command(*command);
             } else {
-                if Self::is_symbol(lexema) {
-                    token = Token::Symbol(String::from(lexema));
+                if Self::is_symbol(lexeme) {
+                    token = Token::Symbol(String::from(lexeme));
                 } else {
-                    let lit = Literal::from_str(lexema);
+                    let lit = Literal::from_str(lexeme);
 
                     match lit {
                         Ok(lit) => {

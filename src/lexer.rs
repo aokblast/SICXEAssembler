@@ -1,31 +1,31 @@
-pub fn parse_line_to_lexemas(line: &str) -> Vec<String> {
-    let mut lexema = String::new();
+pub fn parse_line_to_lexemes(line: &str) -> Vec<String> {
+    let mut lexeme = String::new();
     let mut res= vec![];
     let mut in_str = false;
 
     for c in line.chars() {
         match c {
             '\'' => {
-                lexema.push(c);
+                lexeme.push(c);
                 in_str = !in_str;
             }
             ' ' | '\t' => {
                 if in_str {
-                    lexema.push(' ');
-                } else if lexema.len() > 0 {
-                    res.push(lexema);
-                    lexema = String::new();
+                    lexeme.push(' ');
+                } else if lexeme.len() > 0 {
+                    res.push(lexeme);
+                    lexeme = String::new();
                 }
             }
             _ => {
-                lexema.push(c);
+                lexeme.push(c);
             }
 
         }
     }
 
-    if lexema.len() > 0 {
-        res.push(lexema);
+    if lexeme.len() > 0 {
+        res.push(lexeme);
     }
 
     res

@@ -13,8 +13,8 @@ pub enum Flag {
 }
 
 impl Flag {
-    pub fn from_prefix(lexema: &str) -> Option<Flag> {
-        return match lexema.chars().nth(0).unwrap() {
+    pub fn from_prefix(lexeme: &str) -> Option<Flag> {
+        return match lexeme.chars().nth(0).unwrap() {
             '+' => {
                 Some(Flag::E)
             }
@@ -30,8 +30,8 @@ impl Flag {
         }
     }
 
-    pub fn from_suffix(lexema: &str) -> Option<Flag> {
-        if lexema.len() > 2 && &lexema[lexema.len() - 2..] == ",X" {
+    pub fn from_suffix(lexeme: &str) -> Option<Flag> {
+        if lexeme.len() > 2 && &lexeme[lexeme.len() - 2..] == ",X" {
             return Some(Flag::X);
         }
         None

@@ -52,7 +52,7 @@ impl Expression {
                         if self.label.is_some() && self.operand.is_some() {
                             if d == Directive::BYTE {
                                 if let Operand::Literal(Literal::RegisterPair(_)) = &(self.operand.as_ref().unwrap().0) {
-                                    Err("Operand must not be Regist file for BYTE directive")?
+                                    Err("Operand must not be Register file for BYTE directive")?
                                 } else{
                                     Ok(self)
                                 }
@@ -151,8 +151,8 @@ impl Expression {
     }
 
     pub fn from_str(line: &str) -> Result<Expression, Box<dyn Error>> {
-        let lexemas = lexer::parse_line_to_lexemas(line);
-        let tokens = Token::from_lexemas(&lexemas);
+        let lexemes = lexer::parse_line_to_lexemes(line);
+        let tokens = Token::from_lexemes(&lexemes);
 
         let mut command = None;
         let mut label = None;
@@ -168,7 +168,7 @@ impl Expression {
             1 => {
                 match &tokens[0] {
                     Token::Command(cmd) => {
-                        command = Some((*cmd, lexemas[0].clone()));
+                        command = Some((*cmd, lexemes[0].clone()));
                     }
                     _ => {
                         Err("Invalid expression(There must be a instruction in one line)")?
@@ -187,7 +187,7 @@ impl Expression {
                         label = Some(String::from(sym));
                     }
                     Token::Command(cmd) => {
-                        command = Some((*cmd, lexemas[0].clone()));
+                        command = Some((*cmd, lexemes[0].clone()));
                     }
                     _ => {
                         Err("Invalid expression(First Argument must be a Symbol)")?
@@ -198,7 +198,7 @@ impl Expression {
                     Token::Command(cmd) => {
                         match command {
                             None => {
-                                command = Some((*cmd, lexemas[1].clone()));
+                                command = Some((*cmd, lexemes[1].clone()));
                             }
                             Some(_) => {
                                 Err("Invalid expression(Too many command in one line)")?
@@ -207,10 +207,10 @@ impl Expression {
                         }
                     }
                     Token::Symbol(sym) => {
-                        operand = Some((Operand::Symbol(String::from(sym)), lexemas[1].clone()));
+                        operand = Some((Operand::Symbol(String::from(sym)), lexemes[1].clone()));
                     }
                     Token::Literal(lit) => {
-                        operand = Some((Operand::Literal(lit.clone()), lexemas[1].clone()));
+                        operand = Some((Operand::Literal(lit.clone()), lexemes[1].clone()));
                     }
                 }
             }
@@ -231,7 +231,7 @@ impl Expression {
                 }
                 match &tokens[1] {
                     Token::Command(cmd) => {
-                        command = Some((*cmd, lexemas[1].clone()));
+                        command = Some((*cmd, lexemes[1].clone()));
                     }
                     _ => {
                         Err("Invalid expression(second token must be instruction)")?
@@ -239,10 +239,10 @@ impl Expression {
                 }
                 match &tokens[2] {
                     Token ::Literal(lit) => {
-                        operand = Some((Operand::Literal(lit.clone()), lexemas[2].clone()));
+                        operand = Some((Operand::Literal(lit.clone()), lexemes[2].clone()));
                     }
                     Token::Symbol(sym) => {
-                        operand = Some((Operand::Symbol(String::from(sym)), lexemas[2].clone()));
+                        operand = Some((Operand::Symbol(String::from(sym)), lexemes[2].clone()));
                     }
                     _ => {
                         Err("Invalid expression(third token must not be instruction)")?
