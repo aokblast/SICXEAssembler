@@ -341,7 +341,7 @@ impl ParserData {
             texts.push(cur_text);
         }
 
-        header.len = cur_addr;
+        header.len = cur_addr - header.start_address;
         Ok(Self{symbol_table, header, texts, end})
     }
 }

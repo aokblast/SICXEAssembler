@@ -30,7 +30,7 @@ fn main() {
 
     println!("{:>04} {:>08} {:>12} {:>12} {:>12} {}", "line", "address", "label", "operate", "operand", "opcode");
 
-    println!("{:>04} {:>8} {:>12} {:>12} {:>12}", line, address, data.header.program_name, "START", data.header.start_address);
+    println!("{:>04} {:>8X} {:>12} {:>12} {:>12X}", line, address, data.header.program_name, "START", data.header.start_address);
 
     line += 1;
 
